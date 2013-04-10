@@ -26,7 +26,7 @@ def is_ip_in_nets(ip, nets):
             return True
     return False
 
-class AuthIP(object):
+class AuthIPMiddleware(object):
     def process_request(self, request):
         # gather some info
         request_ip = get_ip(request)
