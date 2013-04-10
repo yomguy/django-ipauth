@@ -2,12 +2,12 @@
 import logging
 
 from django.conf import settings
-
-from ipauth.models import Range
-from ipauth.signals import included_ip_found
-
-import urlparse
+from django.db.models import Q
 from django.shortcuts import redirect
+
+from ipauth.models import Range, IP
+from ipauth.signals import included_ip_found
+import urlparse
 
 logger = logging.getLogger('django_ipauth: IP address filtering started')
 
@@ -30,10 +30,10 @@ class AuthIPMiddleware(object):
     def process_request(self, request):
         # gather some info
         request_ip = get_ip(request)
-        ip = IP(ip)
+        ip = IP(request_ip)
         ip_range = Range.objects.get(Q(lower=ip) | Q(lower__lte=ip, upper__gte=ip))
 
-        if ip_range:
+        if ip_range and not request.user.is_authenticated():
             print request_ip
             request.included_ip = True
             included_ip_found.send(sender=request, ip=request_ip)
