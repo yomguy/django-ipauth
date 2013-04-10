@@ -149,7 +149,7 @@ class Range(models.Model):
     def clean(self):
         if self.upper and self.upper.int:
             try:
-                if self.lower >= self.upper:
+                if self.lower > self.upper:
                     raise ValidationError('Lower end of the range must be less '
                                           'than the upper end')
             except ValueError, e:
