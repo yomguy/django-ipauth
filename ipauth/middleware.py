@@ -36,8 +36,8 @@ def is_ip_in_nets(ip, nets):
 
 
 class AuthIPMiddleware(object):
-
-    def process_request(self, request):
+    
+    def process_request(self, request, redirect_field_name=REDIRECT_FIELD_NAME):
         # gather some info
         user = request.user
         request_ip = get_ip(request)
@@ -46,7 +46,6 @@ class AuthIPMiddleware(object):
         redirect_to = request.REQUEST.get(redirect_field_name, '')
 
         if ip_range and not user.is_authenticated():
-            print request_ip
             request.included_ip = True
             included_ip_found.send(sender=request, ip=request_ip)
 
