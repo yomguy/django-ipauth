@@ -42,7 +42,7 @@ class AuthIPMiddleware(object):
         user = request.user
         request_ip = get_ip(request)
         ip = IP(request_ip)
-        ip_range = Range.objects.get(Q(lower=ip) | Q(lower__lte=ip, upper__gte=ip))
+        ip_range = Range.objects.filter(Q(lower=ip) | Q(lower__lte=ip, upper__gte=ip))
         redirect_to = request.REQUEST.get(redirect_field_name, '')
 
         if ip_range and not user.is_authenticated():
